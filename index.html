@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GlobeCash – Currency Converter for Every Country</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf7f0;--card:#fff;--ink:#14193a;--mute:#6a6f8a;--line:#e8e1cf;--a:#a67c1f;--soft:#f6f1e3;--shadow:0 24px 60px -28px rgba(20,25,58,.35);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0e22;--card:#111838;--ink:#f4efe0;--mute:#98a1c0;--line:#252d57;--a:#d4af5a;--soft:#18204a;--shadow:0 24px 60px -28px rgba(0,0,0,.8);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a0e22;--card:#111838;--ink:#f4efe0;--mute:#98a1c0;--line:#252d57;--a:#d4af5a;--soft:#18204a;--shadow:0 24px 60px -28px rgba(0,0,0,.8);color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.55;min-height:100vh;overflow-x:hidden;position:relative}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);z-index:0;pointer-events:none}
+.b1{width:360px;height:360px;background:var(--a);opacity:.16;top:-120px;left:-100px}.b2{width:320px;height:320px;background:#3b4cca;opacity:.18;bottom:-100px;right:-80px}
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:22px 16px 40px}
+nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.nav-r{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.logo{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.35rem;display:flex;align-items:center;gap:10px;letter-spacing:.01em}
+.logo i{font-style:normal;background:var(--a);color:var(--bg);width:36px;height:36px;border-radius:10px;display:grid;place-items:center}
+nav button{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:20px;padding:6px 14px;font:inherit;font-size:.85rem;cursor:pointer}
+.pill{font-size:.78rem;padding:6px 12px;border-radius:20px;border:1px solid var(--line);background:var(--card);color:var(--mute)}
+.pill.ok{color:#2e9d6a;border-color:#2e9d6a66}.pill.off{color:#c0833a;border-color:#c0833a66}
+header.hero{text-align:center;padding:38px 0 24px}
+h1{font-family:'Playfair Display',Georgia,serif;font-size:clamp(2rem,6vw,3.2rem);line-height:1.12;margin:0 0 12px;font-weight:700}
+h1 span{color:var(--a);font-style:italic}
+.hero p{color:var(--mute);margin:0 auto;max-width:520px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow)}
+label.l{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.88rem;margin-bottom:7px;letter-spacing:.02em}
+label.l b{background:var(--a);color:var(--bg);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.74rem}
+.field{background:var(--soft);border:1px solid var(--line);border-radius:14px;display:flex;align-items:center;gap:10px;padding:0 14px;transition:.15s}
+.field:focus-within{border-color:var(--a);background:var(--card)}
+.field input{flex:1;min-width:0;border:0;background:transparent;color:var(--ink);font:inherit;font-size:1.02rem;padding:14px 0;outline:0;font-weight:500}
+#amt{font-size:1.6rem;font-weight:600;font-family:'Playfair Display',Georgia,serif}
+.fl{font-size:1.4rem}
+.row{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end;margin-top:18px}
+.cb{position:relative}
+.cb ul{position:absolute;z-index:20;left:0;right:0;top:calc(100% + 6px);max-height:290px;overflow:auto;margin:0;padding:6px;list-style:none;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.cb li{display:grid;grid-template-columns:auto 1fr;column-gap:10px;padding:8px 10px;border-radius:10px;cursor:pointer;align-items:center}
+.cb li:hover{background:var(--soft)}.cb li span{grid-row:span 2;font-size:1.4rem}.cb li small{color:var(--mute)}
+.cb li.none{display:block;color:var(--mute);cursor:default}
+#swap{width:46px;height:46px;border-radius:50%;border:0;background:var(--a);color:var(--bg);font-size:1.25rem;cursor:pointer;transition:transform .35s;margin-bottom:4px}
+#swap:hover{transform:rotate(180deg)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center}
+.chips small{color:var(--mute);margin-right:4px}
+.chip{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:20px;padding:5px 12px;font:inherit;font-size:.85rem;cursor:pointer}
+.chip:hover,.chip.on{background:var(--a);color:var(--bg);border-color:var(--a)}
+.result{margin-top:22px;border-radius:18px;padding:26px 20px;color:#f4efe0;background:linear-gradient(135deg,#0d1330,#1d2860);border:1px solid #d4af5a88;text-align:center}
+.result .s{opacity:.85;font-size:.95rem}.result .big{font-family:'Playfair Display',Georgia,serif;color:#e6c46f;font-size:clamp(1.9rem,7vw,3.1rem);font-weight:700;word-break:break-word;line-height:1.15;margin:6px 0}
+.result .r{opacity:.85;font-size:.9rem}
+details{margin-top:14px;background:var(--soft);border-radius:12px;padding:10px 14px;border:1px solid var(--line)}
+summary{cursor:pointer;font-weight:500;font-size:.93rem}
+details p{color:var(--mute);font-size:.88rem;margin:8px 0}
+.mini{max-width:260px;margin-top:6px}
+h2{font-family:'Playfair Display',Georgia,serif;font-size:1.5rem;margin:38px 0 12px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+td,th{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line)}th{background:var(--soft);font-size:.85rem;letter-spacing:.06em}
+tr:last-child td{border-bottom:0}td:last-child,th:last-child{text-align:right;font-weight:600}
+.tw{overflow-x:auto}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.st{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.st b{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--a);color:var(--a);margin-bottom:8px;font-family:'Playfair Display',Georgia,serif}
+.st p{margin:4px 0 0;color:var(--mute);font-size:.92rem}
+footer{margin-top:36px;text-align:center;color:var(--mute);font-size:.82rem}
+@media(max-width:560px){.row{grid-template-columns:1fr}#swap{justify-self:center;margin:0}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="wrap">
+<nav><div class="logo"><i>$</i>GlobeCash</div><div class="nav-r"><span id="status" class="pill">Connecting…</span><button id="theme" aria-label="Switch light or dark mode">◐ Theme</button></div></nav>
+<header class="hero">
+<h1>Convert <span>any currency</span>,<br>anywhere in the world</h1>
+<p>Type an amount, pick two countries, and see the answer straight away. No sign-up, no confusion.</p>
+</header>
+
+<main class="card">
+<label class="l" for="amt"><b>1</b>How much money?</label>
+<div class="field"><span class="fl">💰</span><input id="amt" inputmode="decimal" value="100" autocomplete="off" placeholder="Type any amount"></div>
+
+<div class="row">
+<div><label class="l"><b>2</b>From (you have)</label>
+<div class="cb" id="cbF"><div class="field"><span class="fl"></span><input autocomplete="off" placeholder="Search country or currency" aria-label="From currency"></div><ul hidden></ul></div></div>
+<button id="swap" aria-label="Swap currencies" title="Swap">⇄</button>
+<div><label class="l"><b>3</b>To (you want)</label>
+<div class="cb" id="cbT"><div class="field"><span class="fl"></span><input autocomplete="off" placeholder="Search country or currency" aria-label="To currency"></div><ul hidden></ul></div></div>
+</div>
+
+<div class="chips" id="chips"><small>Quick pick “To”:</small></div>
+
+<div class="result" aria-live="polite"><div class="s" id="rs"></div><div class="big" id="rb"></div><div class="r" id="rr"></div></div>
+
+<details><summary>Have an exact rate from your bank? Use it instead</summary>
+<p id="cl">Leave empty to use the market rate.</p>
+<div class="field mini"><input id="cr" inputmode="decimal" placeholder="Your own rate"></div></details>
+</main>
+
+<h2>Handy amounts</h2>
+<div class="tw"><table><thead><tr><th id="th1"></th><th id="th2"></th></tr></thead><tbody id="tb"></tbody></table></div>
+
+<h2>How it works</h2>
+<div class="steps">
+<div class="st"><b>1</b><strong>Enter an amount</strong><p>Any number works — whole, decimal, tiny or huge.</p></div>
+<div class="st"><b>2</b><strong>Choose two currencies</strong><p>Click a box and type a country (like “Brazil”) or code (like “BRL”). Over 160 currencies cover every country.</p></div>
+<div class="st"><b>3</b><strong>Read your answer</strong><p>The colourful box shows the result instantly. Use ⇄ to flip direction.</p></div>
+</div>
+
+<footer>Exchange rates are indicative mid-market values and may differ from the rate your bank or provider offers. For payments, confirm the final rate with your provider.<br>Countries sharing a currency (like the euro or US dollar) are grouped together.</footer>
+</div>
+
+<script>
+const raw=`USD|US Dollar|US|1|United States;Ecuador El Salvador Puerto Rico Panama Zimbabwe Timor-Leste
+EUR|Euro|EU|0.86|Eurozone;Germany France Italy Spain Netherlands Belgium Austria Ireland Portugal Greece Finland Croatia Slovakia Slovenia Estonia Latvia Lithuania Luxembourg Malta Cyprus Montenegro Kosovo
+GBP|British Pound|GB|0.74|United Kingdom;England Scotland Wales
+JPY|Japanese Yen|JP|150|Japan
+INR|Indian Rupee|IN|88|India
+CNY|Chinese Yuan|CN|7.1|China
+AUD|Australian Dollar|AU|1.52|Australia;Kiribati Tuvalu Nauru
+CAD|Canadian Dollar|CA|1.38|Canada
+CHF|Swiss Franc|CH|0.8|Switzerland;Liechtenstein
+NZD|New Zealand Dollar|NZ|1.7|New Zealand;Cook Islands
+SGD|Singapore Dollar|SG|1.29|Singapore
+HKD|Hong Kong Dollar|HK|7.8|Hong Kong
+KRW|South Korean Won|KR|1400|South Korea
+SEK|Swedish Krona|SE|9.4|Sweden
+NOK|Norwegian Krone|NO|10.1|Norway
+DKK|Danish Krone|DK|6.4|Denmark;Greenland Faroe
+PLN|Polish Zloty|PL|3.65|Poland
+CZK|Czech Koruna|CZ|21|Czechia;Czech Republic
+HUF|Hungarian Forint|HU|345|Hungary
+RON|Romanian Leu|RO|4.35|Romania
+BGN|Bulgarian Lev|BG|1.68|Bulgaria
+ISK|Icelandic Krona|IS|122|Iceland
+RUB|Russian Ruble|RU|82|Russia
+UAH|Ukrainian Hryvnia|UA|41.5|Ukraine
+TRY|Turkish Lira|TR|42|Türkiye;Turkey
+ILS|Israeli Shekel|IL|3.3|Israel;Palestine
+AED|UAE Dirham|AE|3.6725|United Arab Emirates;UAE Dubai Abu Dhabi
+SAR|Saudi Riyal|SA|3.75|Saudi Arabia
+QAR|Qatari Riyal|QA|3.64|Qatar
+KWD|Kuwaiti Dinar|KW|0.306|Kuwait
+BHD|Bahraini Dinar|BH|0.376|Bahrain
+OMR|Omani Rial|OM|0.385|Oman
+JOD|Jordanian Dinar|JO|0.709|Jordan
+LBP|Lebanese Pound|LB|89500|Lebanon
+IQD|Iraqi Dinar|IQ|1310|Iraq
+IRR|Iranian Rial|IR|42000|Iran
+SYP|Syrian Pound|SY|13000|Syria
+YER|Yemeni Rial|YE|535|Yemen
+EGP|Egyptian Pound|EG|48|Egypt
+MAD|Moroccan Dirham|MA|9.2|Morocco
+DZD|Algerian Dinar|DZ|130|Algeria
+TND|Tunisian Dinar|TN|2.9|Tunisia
+LYD|Libyan Dinar|LY|5.4|Libya
+SDG|Sudanese Pound|SD|600|Sudan
+SSP|South Sudanese Pound|SS|4500|South Sudan
+NGN|Nigerian Naira|NG|1500|Nigeria
+GHS|Ghanaian Cedi|GH|11|Ghana
+KES|Kenyan Shilling|KE|129|Kenya
+UGX|Ugandan Shilling|UG|3600|Uganda
+TZS|Tanzanian Shilling|TZ|2500|Tanzania
+ETB|Ethiopian Birr|ET|140|Ethiopia
+SOS|Somali Shilling|SO|571|Somalia
+ZAR|South African Rand|ZA|17.5|South Africa
+ZMW|Zambian Kwacha|ZM|23|Zambia
+MWK|Malawian Kwacha|MW|1735|Malawi
+BWP|Botswana Pula|BW|13.5|Botswana
+NAD|Namibian Dollar|NA|17.5|Namibia
+SZL|Eswatini Lilangeni|SZ|17.5|Eswatini
+LSL|Lesotho Loti|LS|17.5|Lesotho
+MZN|Mozambican Metical|MZ|64|Mozambique
+AOA|Angolan Kwanza|AO|915|Angola
+ZWG|Zimbabwe Gold|ZW|26|Zimbabwe
+XOF|West African CFA Franc|SN|565|West Africa;Senegal Ivory Coast Mali Burkina Faso Benin Togo Niger Guinea-Bissau
+XAF|Central African CFA Franc|CM|565|Central Africa;Cameroon Gabon Chad Congo Central African Republic Equatorial Guinea
+CDF|Congolese Franc|CD|2850|DR Congo
+RWF|Rwandan Franc|RW|1450|Rwanda
+BIF|Burundian Franc|BI|2950|Burundi
+DJF|Djiboutian Franc|DJ|178|Djibouti
+ERN|Eritrean Nakfa|ER|15|Eritrea
+KMF|Comorian Franc|KM|425|Comoros
+MUR|Mauritian Rupee|MU|45|Mauritius
+SCR|Seychellois Rupee|SC|14.5|Seychelles
+MGA|Malagasy Ariary|MG|4500|Madagascar
+GMD|Gambian Dalasi|GM|72|Gambia
+SLE|Sierra Leonean Leone|SL|22.7|Sierra Leone
+LRD|Liberian Dollar|LR|190|Liberia
+GNF|Guinean Franc|GN|8650|Guinea
+CVE|Cape Verdean Escudo|CV|95|Cape Verde
+MRU|Mauritanian Ouguiya|MR|40|Mauritania
+STN|São Tomé Dobra|ST|21|São Tomé and Príncipe
+MXN|Mexican Peso|MX|18.5|Mexico
+BRL|Brazilian Real|BR|5.4|Brazil
+ARS|Argentine Peso|AR|1400|Argentina
+CLP|Chilean Peso|CL|950|Chile
+COP|Colombian Peso|CO|3900|Colombia
+PEN|Peruvian Sol|PE|3.6|Peru
+UYU|Uruguayan Peso|UY|40|Uruguay
+PYG|Paraguayan Guarani|PY|7300|Paraguay
+BOB|Bolivian Boliviano|BO|6.9|Bolivia
+VES|Venezuelan Bolívar|VE|250|Venezuela
+GYD|Guyanese Dollar|GY|209|Guyana
+SRD|Surinamese Dollar|SR|38|Suriname
+GTQ|Guatemalan Quetzal|GT|7.7|Guatemala
+HNL|Honduran Lempira|HN|26.3|Honduras
+NIO|Nicaraguan Córdoba|NI|36.8|Nicaragua
+CRC|Costa Rican Colón|CR|505|Costa Rica
+PAB|Panamanian Balboa|PA|1|Panama
+DOP|Dominican Peso|DO|62|Dominican Republic
+JMD|Jamaican Dollar|JM|160|Jamaica
+TTD|Trinidad & Tobago Dollar|TT|6.8|Trinidad and Tobago
+BBD|Barbadian Dollar|BB|2|Barbados
+BSD|Bahamian Dollar|BS|1|Bahamas
+BZD|Belize Dollar|BZ|2|Belize
+HTG|Haitian Gourde|HT|131|Haiti
+CUP|Cuban Peso|CU|24|Cuba
+XCD|East Caribbean Dollar|AG|2.7|Eastern Caribbean;Antigua Dominica Grenada St Lucia St Kitts Montserrat Anguilla
+AWG|Aruban Florin|AW|1.79|Aruba
+ANG|Netherlands Antillean Guilder|CW|1.79|Curaçao;Sint Maarten
+KYD|Cayman Islands Dollar|KY|0.83|Cayman Islands
+BMD|Bermudian Dollar|BM|1|Bermuda
+THB|Thai Baht|TH|32.5|Thailand
+VND|Vietnamese Dong|VN|26300|Vietnam
+IDR|Indonesian Rupiah|ID|16500|Indonesia
+MYR|Malaysian Ringgit|MY|4.2|Malaysia
+PHP|Philippine Peso|PH|57|Philippines
+TWD|New Taiwan Dollar|TW|30.5|Taiwan
+PKR|Pakistani Rupee|PK|282|Pakistan
+BDT|Bangladeshi Taka|BD|122|Bangladesh
+LKR|Sri Lankan Rupee|LK|300|Sri Lanka
+NPR|Nepalese Rupee|NP|141|Nepal
+BTN|Bhutanese Ngultrum|BT|88|Bhutan
+MVR|Maldivian Rufiyaa|MV|15.4|Maldives
+AFN|Afghan Afghani|AF|68|Afghanistan
+MMK|Myanmar Kyat|MM|2100|Myanmar;Burma
+KHR|Cambodian Riel|KH|4020|Cambodia
+LAK|Lao Kip|LA|21700|Laos
+MNT|Mongolian Tögrög|MN|3600|Mongolia
+BND|Brunei Dollar|BN|1.29|Brunei
+MOP|Macanese Pataca|MO|8.04|Macau
+KPW|North Korean Won|KP|900|North Korea
+KZT|Kazakhstani Tenge|KZ|540|Kazakhstan
+UZS|Uzbekistani Som|UZ|12000|Uzbekistan
+KGS|Kyrgyzstani Som|KG|87.5|Kyrgyzstan
+TJS|Tajikistani Somoni|TJ|9.3|Tajikistan
+TMT|Turkmenistani Manat|TM|3.5|Turkmenistan
+AZN|Azerbaijani Manat|AZ|1.7|Azerbaijan
+GEL|Georgian Lari|GE|2.7|Georgia
+AMD|Armenian Dram|AM|385|Armenia
+BYN|Belarusian Ruble|BY|3|Belarus
+MDL|Moldovan Leu|MD|17|Moldova
+RSD|Serbian Dinar|RS|100|Serbia
+BAM|Bosnia Convertible Mark|BA|1.68|Bosnia and Herzegovina
+MKD|Macedonian Denar|MK|53|North Macedonia
+ALL|Albanian Lek|AL|83|Albania
+GIP|Gibraltar Pound|GI|0.74|Gibraltar
+FKP|Falkland Islands Pound|FK|0.74|Falkland Islands
+FJD|Fijian Dollar|FJ|2.25|Fiji
+PGK|Papua New Guinean Kina|PG|4.2|Papua New Guinea
+WST|Samoan Tala|WS|2.75|Samoa
+TOP|Tongan Paʻanga|TO|2.35|Tonga
+VUV|Vanuatu Vatu|VU|120|Vanuatu
+SBD|Solomon Islands Dollar|SB|8.4|Solomon Islands
+XPF|CFP Franc|PF|103|French Pacific;Tahiti New Caledonia Wallis Futuna`;
+const C=raw.trim().split('\n').map(l=>{const [code,name,cc,rate,country]=l.split('|');return{code,name,cc,rate:+rate,disp:country.split(';')[0],s:(code+' '+name+' '+country).toLowerCase()}});
+const M=Object.fromEntries(C.map(c=>[c.code,c]));
+const $=id=>document.getElementById(id);
+const flag=cc=>[...cc].map(ch=>String.fromCodePoint(127397+ch.charCodeAt(0))).join('');
+const S={from:'USD',to:'INR'};
+try{const p=JSON.parse(localStorage.getItem('gc')||'{}');if(M[p.from])S.from=p.from;if(M[p.to])S.to=p.to}catch(e){}
+
+function fmt(x,d=2){if(!isFinite(x))return '—';if(x===0)return '0';const a=Math.abs(x);
+ if(a>=1e21)return x.toExponential(3);
+ if(a>=1)return x.toLocaleString('en-US',{maximumFractionDigits:d});
+ return x.toLocaleString('en-US',{maximumSignificantDigits:4})}
+
+function combo(id,key){const root=$(id),inp=root.querySelector('input'),fl=root.querySelector('.fl'),ul=root.querySelector('ul');
+ const sync=()=>{const c=M[S[key]];fl.textContent=flag(c.cc);inp.value=c.disp+' · '+c.code};
+ const render=q=>{q=q.trim().toLowerCase();const r=C.filter(c=>!q||c.s.includes(q));
+  ul.innerHTML=r.map(c=>`<li data-c="${c.code}"><span>${flag(c.cc)}</span><b>${c.disp}</b><small>${c.name} · ${c.code}</small></li>`).join('')||'<li class="none">No match — try a country or currency name</li>';ul.hidden=false};
+ const pick=code=>{S[key]=code;sync();ul.hidden=true;inp.blur();update()};
+ inp.addEventListener('focus',()=>{inp.select();render('')});
+ inp.addEventListener('input',()=>render(inp.value));
+ inp.addEventListener('keydown',e=>{if(e.key==='Enter'){const li=ul.querySelector('li[data-c]');if(li)pick(li.dataset.c)}});
+ ul.addEventListener('pointerdown',e=>{const li=e.target.closest('li[data-c]');if(li){e.preventDefault();pick(li.dataset.c)}});
+ inp.addEventListener('blur',()=>{ul.hidden=true;sync()});
+ return sync}
+const syncF=combo('cbF','from'),syncT=combo('cbT','to');
+
+['USD','EUR','GBP','INR','JPY','AED','CAD','AUD','SGD','CNY'].forEach(c=>{const b=document.createElement('button');b.className='chip';b.dataset.c=c;b.textContent=flag(M[c].cc)+' '+c;b.onclick=()=>{S.to=c;syncT();update()};$('chips').appendChild(b)});
+
+function update(){
+ const A=S.from,B=S.to,v=$('amt').value.replace(/[,\s]/g,'');const n=parseFloat(v);
+ const own=parseFloat($('cr').value.replace(/,/g,''));
+ const rate=own>0?own:M[B].rate/M[A].rate;
+ $('cl').textContent=`Enter how many ${B} you get for 1 ${A}. Leave empty to use the market rate.`;
+ document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.c===B));
+ if(v===''||isNaN(n)||n<0){$('rs').textContent='';$('rb').textContent=v===''?'Type an amount above ☝️':'Please enter a positive number';$('rr').textContent='';}
+ else{$('rs').textContent=`${fmt(n,6)} ${M[A].name}${n===1?' equals':'s equal'}`.replace('s equal','')+(n===1?'':' equals');
+  $('rs').textContent=`${fmt(n,6)} ${A} (${M[A].disp}) equals`;
+  $('rb').textContent=`${fmt(n*rate)} ${B}`;
+  $('rr').textContent=`1 ${A} = ${fmt(rate,4)} ${B}  ·  1 ${B} = ${fmt(1/rate,4)} ${A}${own>0?'  ·  using your rate':''}`}
+ $('th1').textContent=A;$('th2').textContent=B;
+ $('tb').innerHTML=[1,5,10,50,100,500,1000,10000].map(a=>`<tr><td>${fmt(a)} ${A}</td><td>${fmt(a*rate)} ${B}</td></tr>`).join('');
+ try{localStorage.setItem('gc',JSON.stringify(S))}catch(e){}
+}
+$('amt').addEventListener('input',update);$('cr').addEventListener('input',update);
+$('swap').onclick=()=>{[S.from,S.to]=[S.to,S.from];$('cr').value='';syncF();syncT();update()};
+$('theme').onclick=()=>{const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark'};
+const st=$('status');
+function badge(t,ok){st.textContent=t;st.className='pill '+(ok?'ok':'off')}
+async function loadRates(){
+ const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),8000);
+ try{const r=await fetch('/api/rates',{signal:ctl.signal});if(!r.ok)throw 0;const d=await r.json();
+  let n=0;for(const k in d.rates){if(M[k]&&d.rates[k]>0){M[k].rate=d.rates[k];n++}}
+  if(n<20)throw 0;
+  const dt=d.updated?new Date(d.updated):new Date();
+  badge('● Live rates · '+dt.toLocaleString([],{dateStyle:'medium',timeStyle:'short'}),true);update()}
+ catch(e){badge('○ Offline reference rates',false)}
+ finally{clearTimeout(t)}}
+syncF();syncT();update();loadRates();setInterval(loadRates,1800000);
+</script>
+</body>
+</html>
